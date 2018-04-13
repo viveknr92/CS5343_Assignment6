@@ -1,8 +1,11 @@
 package spellchecker;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 /*
@@ -27,11 +30,23 @@ You already have linear probing and quadratic probing functions.  Print the coll
 public class HashTable {
 	private int tablesize;
 	public String[] hashtable;
+	
 	//public HashEntry[] hashtable = new HashEntry[tablesize];
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		HashTable h = new HashTable(53);
+		writeFile("", false);
+		HashTable h = new HashTable(100);
+		//h.spellcheck("craning");
 		h.searchWord();
+	}
+	
+	public static void writeFile(String data, boolean isAppended) {
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("hashtable.csv", isAppended)))) {
+		    out.print(data);
+		} 
+		catch (IOException e) {
+		    //exception handling left as an exercise for the reader
+		}
 	}
 	
 	public HashTable(int tablesize){
@@ -39,7 +54,7 @@ public class HashTable {
 		this.hashtable = new String[tablesize];
 		String[] str = readStringfromFile("words.txt");
 		for (int i = 0; i < str.length; i++) {
-			System.out.println(i + " - " + str[i] );
+			writeFile(i + " , " + str[i] + "\n", true);
 		}
 		
 	}
@@ -52,11 +67,10 @@ public class HashTable {
 			Scanner sc = new Scanner(file);
 			for (; sc.hasNextLine() ;) {
 				str = sc.nextLine();
-				//collisions = linearprobing(str, collisions);
-				collisions = quadraticprobing(str, collisions);
+				//collisions = linearprobing(str);
+				collisions = quadraticprobing(str);
 				
 			}
-			System.out.println("Collisions = " + collisions);
 			sc.close();
 		} 
 		catch (FileNotFoundException e) {
@@ -66,52 +80,48 @@ public class HashTable {
 		return hashtable;
 	}
 	
-	public int linearprobing(String value, int collisions) {
+	public int linearprobing(String value) {
 		int hashcode = hashFunction(value);
-		//System.out.println(hashcode);
-		int initialhash = hashcode;
-		if (hashtable[initialhash] == null) {
-			hashtable[initialhash] = value;
-			return 0;
-		}
-		while (hashtable[hashcode] != null) {
-			hashcode = (hashcode + 1) % tablesize;
-			collisions++;
-			if(initialhash == hashcode) {
-				//System.out.println("Table full");
-				return collisions;
+		System.out.println(hashcode);
+		int i = 1;
+		int initial = hashcode;
+		for (i = 1 ; hashtable[hashcode] != null ; i++) {
+			hashcode = (initial + i) % tablesize;
+			if(i == tablesize) {
+				System.out.println("Table full");
+				tablesize = tablesize*2;
+				return -1;
 			}
 		}
 		hashtable[hashcode] = value;
-		return collisions;
+		//System.out.println("Collisions = " + (i-1) + " for " + value);
+		return i-1;
 	}
 	
-	public int quadraticprobing(String value, int collisions) {
+	public int quadraticprobing(String value) {
 		int hashcode = hashFunction(value);
 		int i = 1;
-		//System.out.println(hashcode);
-		int initialhash = hashcode;
-		if (hashtable[initialhash] == null) {
-			hashtable[initialhash] = value;
-			return 0;
-		}
-		while (hashtable[hashcode] != null) {
-			hashcode = (hashcode + i*i) % (tablesize - 1);
-			i++;
-			collisions++;
-			if(initialhash == hashcode) {
-				//System.out.println("Table full");
-				return collisions;
+		int initial = hashcode;
+		for (i = 1 ; hashtable[hashcode] != null ; i++) {
+			hashcode = (initial + (i*i)) % tablesize;
+			if(i == tablesize) {
+				System.out.println("Table full");
+				return -1;
 			}
 		}
 		hashtable[hashcode] = value;
-		return collisions;
+		//System.out.println("Collisions = " + (i-1) + " for " + value);
+		return i-1;
 	}
 	
 	public int hashFunction(String str) {
 		int hash = 0;
-		for (int i = 0; i < 2 ; i++) {
-			hash = (hash + str.charAt(i)) % (tablesize - 1);
+		for (int i = 0; i < 3 ; i++) {
+			try {
+				hash = (hash + str.charAt(i)) % tablesize;
+			} catch (StringIndexOutOfBoundsException e) {
+				// ignore strings with less than 3 characters
+			}
 		}
 		//System.out.println(hash);
 		return hash;
@@ -119,40 +129,40 @@ public class HashTable {
 	
 	public boolean spellcheck (String word) {
 		int hashcode = hashFunction(word);
-		int initialhash = hashcode;
+		System.out.println("hashcode " + hashcode + " for " + word);
 		int i = 1;
-		System.out.println();
-		System.out.println(hashcode + " - " + hashtable[hashcode]);
-		if (hashtable[initialhash] == word) {
-			return true;
+		int initial = hashcode;
+		if(hashtable[hashcode] == null) {
+			System.out.println("Word not found - Wrong");
+			return false;
 		}
-		while (!hashtable[hashcode].equals(word)) {
-			hashcode = (hashcode + i) % (tablesize - 1);
-			System.out.println(i);
-			i++;
-			if(initialhash == hashcode) {
-				System.out.println(hashcode + " - " + hashtable[hashcode]);
+		for (i = 1 ; !hashtable[hashcode].equals(word) ; i++) {
+			hashcode = (initial + i*i) % tablesize;
+			if(hashtable[hashcode] == null) {
+				System.out.println("Word not found - Wrong");
 				return false;
 			}
 		}
-		System.out.println(hashcode + " - " + hashtable[hashcode]);
+		System.out.println("Word Found - Correct");
 		return true;
 	}
 	
 	public void searchWord() {
-		//Scanner input = new Scanner(System.in);
-		//String word = "croesus";
-		if(spellcheck("modicum")) {
-			System.out.println("Correct");
-		}
-		else {
-			System.out.println("Wrong");
-		}
-		/*while(input.hasNext()) {
-			word = input.next();
+		Scanner input = null;
+		String word = null;
+		while (true) {
+			System.out.print("Enter word : ");
 			input = new Scanner(System.in);
-			spellcheck(word);
-			
-		}*/
+			word = input.nextLine();
+			if (word.equals("exit") || !word.matches("([a-z])")) {
+				System.out.println("Program exited");
+				break;
+			}
+			if (word.isEmpty()) {
+				continue;
+			}
+			spellcheck(word);	
+		} 
+		input.close();
 	}
 }
