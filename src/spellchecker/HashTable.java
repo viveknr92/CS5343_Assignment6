@@ -45,7 +45,7 @@ public class HashTable {
 		    out.print(data);
 		} 
 		catch (IOException e) {
-		    //exception handling left as an exercise for the reader
+			e.printStackTrace();
 		}
 	}
 	
@@ -154,7 +154,7 @@ public class HashTable {
 			System.out.print("Enter word : ");
 			input = new Scanner(System.in);
 			word = input.nextLine();
-			if (word.equals("exit") || !word.matches("([a-z])")) {
+			if (word.equals("exit")) {
 				System.out.println("Program exited");
 				break;
 			}
