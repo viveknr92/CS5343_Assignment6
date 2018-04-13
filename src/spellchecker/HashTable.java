@@ -30,12 +30,15 @@ You already have linear probing and quadratic probing functions.  Print the coll
 public class HashTable {
 	private int tablesize;
 	public String[] hashtable;
-	
+	public ProbingType probingType;
+	public enum ProbingType {
+	    LINEAR, QUADRATIC;
+	}
 	//public HashEntry[] hashtable = new HashEntry[tablesize];
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		writeFile("", false);
-		HashTable h = new HashTable(100);
+		HashTable h = new HashTable(100, "words.txt", ProbingType.QUADRATIC);
 		//h.spellcheck("craning");
 		h.searchWord();
 	}
@@ -49,27 +52,25 @@ public class HashTable {
 		}
 	}
 	
-	public HashTable(int tablesize){
+	public HashTable(int tablesize, String filename, ProbingType probingType){
 		this.tablesize = tablesize;
 		this.hashtable = new String[tablesize];
-		String[] str = readStringfromFile("words.txt");
-		for (int i = 0; i < str.length; i++) {
-			writeFile(i + " , " + str[i] + "\n", true);
-		}
-		
+		this.probingType = probingType;
+		createHashtablefromWords(filename);
 	}
-	public String[] readStringfromFile(String filename) {
+	public void createHashtablefromWords(String filename) {
 		File file = new File(filename);
-		String str = null;
-		//int hashcode = 0;
+		String word = null;
 		int collisions = 0;
 		try {
 			Scanner sc = new Scanner(file);
 			for (; sc.hasNextLine() ;) {
-				str = sc.nextLine();
-				//collisions = linearprobing(str);
-				collisions = quadraticprobing(str);
-				
+				word = sc.nextLine();
+				if (probingType == ProbingType.LINEAR) {
+					collisions = linearprobing(word);
+				}
+				else if (probingType == ProbingType.QUADRATIC)
+					collisions = quadraticprobing(word);
 			}
 			sc.close();
 		} 
@@ -77,24 +78,26 @@ public class HashTable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return hashtable;
+		for (int i = 0; i < hashtable.length; i++) {
+			writeFile(i + " , " + hashtable[i] + "\n", true);
+		}
 	}
 	
 	public int linearprobing(String value) {
 		int hashcode = hashFunction(value);
-		System.out.println(hashcode);
+		//System.out.println(hashcode);
 		int i = 1;
 		int initial = hashcode;
 		for (i = 1 ; hashtable[hashcode] != null ; i++) {
 			hashcode = (initial + i) % tablesize;
 			if(i == tablesize) {
 				System.out.println("Table full");
-				tablesize = tablesize*2;
+				//tablesize = tablesize*2;
 				return -1;
 			}
 		}
 		hashtable[hashcode] = value;
-		//System.out.println("Collisions = " + (i-1) + " for " + value);
+		System.out.println(initial + " + " + (i - 1) + " = " + hashcode + " for " + value);
 		return i-1;
 	}
 	
@@ -110,7 +113,7 @@ public class HashTable {
 			}
 		}
 		hashtable[hashcode] = value;
-		//System.out.println("Collisions = " + (i-1) + " for " + value);
+		System.out.println(initial + " + " + (i-1)*(i-1) + " = " + hashcode + " for " + value);
 		return i-1;
 	}
 	
@@ -123,7 +126,6 @@ public class HashTable {
 				// ignore strings with less than 3 characters
 			}
 		}
-		//System.out.println(hash);
 		return hash;
 	}
 	
@@ -137,7 +139,10 @@ public class HashTable {
 			return false;
 		}
 		for (i = 1 ; !hashtable[hashcode].equals(word) ; i++) {
-			hashcode = (initial + i*i) % tablesize;
+			if (probingType == ProbingType.LINEAR)
+				hashcode = (initial + i) % tablesize;
+			else if (probingType == ProbingType.QUADRATIC)
+				hashcode = (initial + i*i) % tablesize;
 			if(hashtable[hashcode] == null) {
 				System.out.println("Word not found - Wrong");
 				return false;
