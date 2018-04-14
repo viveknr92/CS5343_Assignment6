@@ -45,14 +45,15 @@ public class HashTable {
 		}
 	}
 	public void changeTableSize() {
-		System.out.println("changing size");
 		HashTable.writeFile("", false);
 		this.tablesize = this.tablesize * 2;
+		System.out.println("Changing hashtable size to : " + tablesize);
 		this.hashtable = new String[tablesize];
 	}
 	public HashTable(int tablesize, String filename, ProbingType probingType){
 		HashTable.writeFile("", false);
 		this.tablesize = tablesize;
+		System.out.println("Initial hashtable size : " + tablesize);
 		this.hashtable = new String[tablesize];
 		this.probingType = probingType;
 		this.filename = filename;
@@ -84,22 +85,21 @@ public class HashTable {
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		for (int i = 0; i < hashtable.length; i++) {
-			writeFile(i + " , " + hashtable[i] + "\n", true);
-		}
+		//for (int i = 0; i < hashtable.length; i++) {
+		//	writeFile(i + " , " + hashtable[i] + "\n", true);
+		//}
 		return true;
 	}
 	
 	public void linearprobing(String value) {
 		int hashcode = hashFunction(value);
-		//System.out.println(hashcode);
 		int i = 1;
 		int initial = hashcode;
 		for (i = 1 ; hashtable[hashcode] != null ; i++) {
 			hashcode = (initial + i) % tablesize;
 		}
 		hashtable[hashcode] = value;
-		System.out.println(initial + " + " + (i-1) + " = " + hashcode + " for " + value);
+		//System.out.println(initial + " + " + (i-1) + " = " + hashcode + " for " + value);
 		return;
 	}
 	
@@ -111,7 +111,7 @@ public class HashTable {
 			hashcode = (initial + (i*i)) % tablesize;
 		}
 		hashtable[hashcode] = value;
-		System.out.println(initial + " + " + (i-1)*(i-1) + " = " + hashcode + " for " + value);
+		//System.out.println(initial + " + " + (i-1)*(i-1) + " = " + hashcode + " for " + value);
 		return;
 	}
 	
