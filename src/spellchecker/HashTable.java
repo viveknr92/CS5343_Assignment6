@@ -28,19 +28,12 @@ You already have linear probing and quadratic probing functions.  Print the coll
 */
 
 public class HashTable {
-	private int tablesize;
+	public int tablesize;
 	public String[] hashtable;
 	public ProbingType probingType;
+	public String filename;
 	public enum ProbingType {
-	    LINEAR, QUADRATIC;
-	}
-	//public HashEntry[] hashtable = new HashEntry[tablesize];
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		writeFile("", false);
-		HashTable h = new HashTable(100, "words.txt", ProbingType.QUADRATIC);
-		//h.spellcheck("craning");
-		h.searchWord();
+		LINEAR, QUADRATIC;
 	}
 	
 	public static void writeFile(String data, boolean isAppended) {
@@ -51,70 +44,75 @@ public class HashTable {
 			e.printStackTrace();
 		}
 	}
-	
+	public void changeTableSize() {
+		System.out.println("changing size");
+		HashTable.writeFile("", false);
+		this.tablesize = this.tablesize * 2;
+		this.hashtable = new String[tablesize];
+	}
 	public HashTable(int tablesize, String filename, ProbingType probingType){
+		HashTable.writeFile("", false);
 		this.tablesize = tablesize;
 		this.hashtable = new String[tablesize];
 		this.probingType = probingType;
-		createHashtablefromWords(filename);
+		this.filename = filename;
+		//createHashtablefromWords(filename);
 	}
-	public void createHashtablefromWords(String filename) {
+	
+	public boolean createHashtablefromWords() {
 		File file = new File(filename);
 		String word = null;
-		int collisions = 0;
+		int numberofentires = 0;
 		try {
 			Scanner sc = new Scanner(file);
 			for (; sc.hasNextLine() ;) {
 				word = sc.nextLine();
+				numberofentires++;
+				if (numberofentires >= tablesize/2) {
+					System.out.println("Table full");
+					sc.close();
+					return false;
+				}
 				if (probingType == ProbingType.LINEAR) {
-					collisions = linearprobing(word);
+					linearprobing(word);
 				}
 				else if (probingType == ProbingType.QUADRATIC)
-					collisions = quadraticprobing(word);
+					quadraticprobing(word);
 			}
 			sc.close();
 		} 
 		catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for (int i = 0; i < hashtable.length; i++) {
 			writeFile(i + " , " + hashtable[i] + "\n", true);
 		}
+		return true;
 	}
 	
-	public int linearprobing(String value) {
+	public void linearprobing(String value) {
 		int hashcode = hashFunction(value);
 		//System.out.println(hashcode);
 		int i = 1;
 		int initial = hashcode;
 		for (i = 1 ; hashtable[hashcode] != null ; i++) {
 			hashcode = (initial + i) % tablesize;
-			if(i == tablesize) {
-				System.out.println("Table full");
-				//tablesize = tablesize*2;
-				return -1;
-			}
 		}
 		hashtable[hashcode] = value;
 		System.out.println(initial + " + " + (i - 1) + " = " + hashcode + " for " + value);
-		return i-1;
+		return;
 	}
 	
-	public int quadraticprobing(String value) {
+	public void quadraticprobing(String value) {
 		int hashcode = hashFunction(value);
 		int i = 1;
 		int initial = hashcode;
 		for (i = 1 ; hashtable[hashcode] != null ; i++) {
 			hashcode = (initial + (i*i)) % tablesize;
-			if(i == tablesize) {
-				System.out.println("Table full");
-				return -1;
-			}
 		}
 		hashtable[hashcode] = value;
 		System.out.println(initial + " + " + (i-1)*(i-1) + " = " + hashcode + " for " + value);
-		return i-1;
+		return;
 	}
 	
 	public int hashFunction(String str) {
@@ -123,7 +121,7 @@ public class HashTable {
 			try {
 				hash = (hash + str.charAt(i)) % tablesize;
 			} catch (StringIndexOutOfBoundsException e) {
-				// ignore strings with less than 3 characters
+				// ignore strings with less characters
 			}
 		}
 		return hash;
