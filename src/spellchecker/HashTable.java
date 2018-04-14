@@ -99,7 +99,7 @@ public class HashTable {
 			hashcode = (initial + i) % tablesize;
 		}
 		hashtable[hashcode] = value;
-		System.out.println(initial + " + " + (i - 1) + " = " + hashcode + " for " + value);
+		System.out.println(initial + " + " + (i-1) + " = " + hashcode + " for " + value);
 		return;
 	}
 	
@@ -117,7 +117,7 @@ public class HashTable {
 	
 	public int hashFunction(String str) {
 		int hash = 0;
-		for (int i = 0; i < 3 ; i++) {
+		for (int i = 0; i < str.length() ; i++) {
 			try {
 				hash = (hash + str.charAt(i)) % tablesize;
 			} catch (StringIndexOutOfBoundsException e) {
