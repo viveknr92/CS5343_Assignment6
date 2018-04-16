@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /*
@@ -37,23 +38,14 @@ public class HashTable {
 		LINEAR, QUADRATIC;
 	}
 	
-	public static void writeFile(String data, boolean isAppended) {
-		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("hashtable.csv", isAppended)))) {
-		    out.print(data);
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 	public HashTable(int tablesize, String filename, ProbingType probingType){
 		this.tablesize = tablesize;
 		this.loadfactor = 0.5;
 		this.hashtable = new String[tablesize];
 		this.probingType = probingType;
 		this.filename = filename;
-		System.out.println("Initial hashtable size : " + tablesize);
 		System.out.println("Using " + probingType + " probing : ");
-		System.out.println("Counting the collisions for each word : ");
+		System.out.println("Initial hashtable size : " + tablesize);
 		createHashtablefromWords();
 		printHashTable();
 	}
@@ -64,7 +56,7 @@ public class HashTable {
 			for (int i = 0; i < hashtable.length; i++) {
 				hashtable[i] = null;
 			}
-			System.out.println("Changing hashtable size to : " + hashtable.length);
+			System.out.println("Load factor exceeded. Changing hashtable size to : " + hashtable.length + " and Re-hashing table.");
 		}
 	}
 	
@@ -72,24 +64,25 @@ public class HashTable {
 		File file = new File(filename);
 		String word = null;
 		int numberofentires = 0;
+		HashMap<String, Integer> collisions = new HashMap<>();
 		try {
 			Scanner sc = new Scanner(file);
 			for (; sc.hasNextLine() ;) {
 				word = sc.nextLine();
 				numberofentires++;
 				if (numberofentires >= tablesize * loadfactor) {
-					System.out.println("\nLoad factor exceeded. Re-hashing table");
 					sc.close();
 					return false;
 				}
 				if (probingType == ProbingType.LINEAR) {
-					linearprobing(word);
+					collisions.put(word, linearprobing(word));
 				}
 				else if (probingType == ProbingType.QUADRATIC) {
-					quadraticprobing(word);
+					collisions.put(word, quadraticprobing(word));
 				}
 			}
-			System.out.println();
+			System.out.println("Counting collisions for each word : ");
+			System.out.println(collisions);
 			sc.close();
 		} 
 		catch (FileNotFoundException e) {
@@ -98,7 +91,7 @@ public class HashTable {
 		return true;
 	}
 	
-	public void linearprobing(String value) {
+	public int linearprobing(String value) {
 		int hashcode = hashFunction(value);
 		int i = 1;
 		int initial = hashcode;
@@ -106,12 +99,10 @@ public class HashTable {
 			hashcode = (initial + i) % tablesize;
 		}
 		hashtable[hashcode] = value;
-		//System.out.println(initial + " + " + (i-1) + " = " + hashcode + " for " + value);
-		System.out.print(value + " - " + (i-1) + " , ");
-		return;
+		return i-1;
 	}
 	
-	public void quadraticprobing(String value) {
+	public int quadraticprobing(String value) {
 		int hashcode = hashFunction(value);
 		int i = 1;
 		int initial = hashcode;
@@ -119,9 +110,7 @@ public class HashTable {
 			hashcode = (initial + (i*i)) % tablesize;
 		}
 		hashtable[hashcode] = value;
-		//System.out.println(initial + " + " + (i-1)*(i-1) + " = " + hashcode + " for " + value);
-		System.out.print(value + " - " + (i-1) + " , ");
-		return;
+		return i-1;
 	}
 	
 	public int hashFunction(String str) {
@@ -138,7 +127,6 @@ public class HashTable {
 	
 	public boolean spellcheck (String word) {
 		int hashcode = hashFunction(word);
-		System.out.println("hashcode " + hashcode + " for " + word);
 		int i = 1;
 		int initial = hashcode;
 		if(hashtable[hashcode] == null) {
@@ -162,8 +150,16 @@ public class HashTable {
 	public void printHashTable() {
 		System.out.println("Hash Table : ");
 		for (int i = 0; i < hashtable.length; i++) {
-			System.out.print(i + "-" + hashtable[i] + " , ");
+			System.out.print(i + "-" + hashtable[i] + ", ");
 		}
 		System.out.println();
+	}
+	public static void writeFile(String data, boolean isAppended) {
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("hashtable.csv", isAppended)))) {
+		    out.print(data);
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

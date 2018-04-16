@@ -31,7 +31,7 @@ public class SpellChecker {
 	public void searchWord(HashTable h) {
 		Scanner input = new Scanner(System.in);
 		String line;
-		System.out.print("Enter word : ");
+		System.out.print("Enter word : (Enter exit to terminate program)");
 		while ((line = input.nextLine()) != null) {
 			if (line.equals("exit")) {
 				return;
