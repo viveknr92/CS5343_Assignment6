@@ -9,13 +9,13 @@ public class LinearProbingTester {
 		System.out.println("With 100 words");
 		HashTable h1 = new HashTable(InitialTablesize, "list_1.txt", ProbingType.LINEAR);
 		h1.searchWord();
-		System.out.println("\n\n");
+		System.out.println("");
 		
 		System.out.println("Adding 10 more words (110 words) ");
-		HashTable h2 = new HashTable(InitialTablesize, "list_2.txt", ProbingType.LINEAR);
+		HashTable h2 = new HashTable(h1.tablesize, "list_2.txt", ProbingType.LINEAR);
 		h2.searchWord();
-		System.out.println("\n\n");
+		System.out.println("");
 		
-		System.out.println("Tester 2 terminated");	
+		System.out.println("Linear Probing Tester terminated");	
 	}
 }

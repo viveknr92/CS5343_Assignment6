@@ -8,16 +8,16 @@ public class QuadraticProbingTester {
 		int InitialTablesize = 53;
 		
 		System.out.println("With 100 words");
-		HashTable h1 = new HashTable(InitialTablesize, "list_1.txt", ProbingType.QUADRATIC);
-		h1.searchWord();
-		System.out.println("\n\n");
+		HashTable h3 = new HashTable(InitialTablesize, "list_1.txt", ProbingType.QUADRATIC);
+		h3.searchWord();
+		System.out.println("");
 		
 		System.out.println("Adding 10 more words (110 words) ");
-		HashTable h2 = new HashTable(InitialTablesize, "list_2.txt", ProbingType.QUADRATIC);
-		h2.searchWord();
-		System.out.println("\n\n");
+		HashTable h4 = new HashTable(h3.tablesize, "list_2.txt", ProbingType.QUADRATIC);
+		h4.searchWord();
+		System.out.println("");
 		
-		System.out.println("Tester 2 terminated");
+		System.out.println("Quadratic Probing Tester terminated");
 	}
 
 }
