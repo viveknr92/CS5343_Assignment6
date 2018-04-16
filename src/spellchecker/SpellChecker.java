@@ -14,6 +14,7 @@ public class SpellChecker {
 		spellchecker.searchWord(h1);
 		System.out.println("Program 1 exited\n\n");
 		
+		System.out.println("With 100 words");
 		HashTable h2 = new HashTable(InitialTablesize, "list_1.txt", ProbingType.QUADRATIC);
 		spellchecker.searchWord(h2);
 		System.out.println("Program 2 exited\n\n");
@@ -23,6 +24,7 @@ public class SpellChecker {
 		spellchecker.searchWord(h3);
 		System.out.println("Program 3 exited\n\n");
 		
+		System.out.println("With 110 words");
 		HashTable h4 = new HashTable(InitialTablesize, "list_2.txt", ProbingType.QUADRATIC);
 		spellchecker.searchWord(h4);
 		System.out.println("Program 4 exited");
@@ -34,7 +36,7 @@ public class SpellChecker {
 		System.out.print("Enter word : (Enter \":q\" to terminate program) ");
 		while ((line = input.nextLine()) != null) {
 			System.out.println("");
-			if (line.equals(":q") || line.equals(":Q")) {
+			if (line.toLowerCase().equals(":q")) {
 				return;
 			}
 			h.spellcheck(line.toLowerCase());
