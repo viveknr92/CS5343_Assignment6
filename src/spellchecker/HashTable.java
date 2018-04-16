@@ -46,7 +46,6 @@ public class HashTable {
 		}
 	}
 	public HashTable(int tablesize, String filename, ProbingType probingType){
-		HashTable.writeFile("", false);
 		this.tablesize = tablesize;
 		this.loadfactor = 0.5;
 		this.hashtable = new String[tablesize];
@@ -60,7 +59,6 @@ public class HashTable {
 	}
 	public void createHashtablefromWords() {
 		while (!readwords()) {
-			HashTable.writeFile("", false);
 			this.tablesize = this.tablesize * 2;
 			this.hashtable = new String[tablesize];
 			for (int i = 0; i < hashtable.length; i++) {
