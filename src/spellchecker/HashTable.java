@@ -79,7 +79,7 @@ public class HashTable {
 				word = sc.nextLine();
 				numberofentires++;
 				if (numberofentires >= tablesize * loadfactor) {
-					System.out.println("Load factor exceeded. Re-hashing table");
+					System.out.println("\nLoad factor exceeded. Re-hashing table");
 					sc.close();
 					return false;
 				}
@@ -90,6 +90,7 @@ public class HashTable {
 					quadraticprobing(word);
 				}
 			}
+			System.out.println();
 			sc.close();
 		} 
 		catch (FileNotFoundException e) {
@@ -107,7 +108,7 @@ public class HashTable {
 		}
 		hashtable[hashcode] = value;
 		//System.out.println(initial + " + " + (i-1) + " = " + hashcode + " for " + value);
-		//System.out.println("Collisions : " + (i-1) + " for " + value);
+		System.out.print(value + " - " + (i-1) + " , ");
 		return;
 	}
 	
@@ -120,7 +121,7 @@ public class HashTable {
 		}
 		hashtable[hashcode] = value;
 		//System.out.println(initial + " + " + (i-1)*(i-1) + " = " + hashcode + " for " + value);
-		//System.out.println("Collisions : " + (i-1) + " for " + value);
+		System.out.print(value + " - " + (i-1) + " , ");
 		return;
 	}
 	

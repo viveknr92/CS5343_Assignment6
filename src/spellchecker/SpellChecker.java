@@ -1,9 +1,5 @@
 package spellchecker;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import spellchecker.HashTable.ProbingType;
@@ -16,26 +12,32 @@ public class SpellChecker {
 		System.out.println("Using List_1 which has 100 words");
 		HashTable h1 = new HashTable(InitialTablesize, "list_1.txt", ProbingType.LINEAR);
 		spellchecker.searchWord(h1);
+		System.out.println("Program 1 exited");
 		
 		HashTable h2 = new HashTable(InitialTablesize, "list_1.txt", ProbingType.QUADRATIC);
 		spellchecker.searchWord(h2);
+		System.out.println("Program 2 exited");
 		
-		System.out.println("Using List_1 which has 110 words");
+		System.out.println("Adding 10 more words");
 		HashTable h3 = new HashTable(InitialTablesize, "list_2.txt", ProbingType.LINEAR);
 		spellchecker.searchWord(h3);
+		System.out.println("Program 3 exited");
 		
 		HashTable h4 = new HashTable(InitialTablesize, "list_2.txt", ProbingType.QUADRATIC);
 		spellchecker.searchWord(h4);
+		System.out.println("Program 4 exited");
+		System.out.println("All programs terminated");
 	}
 	public void searchWord(HashTable h) {
 		Scanner input = new Scanner(System.in);
 		String line;
+		System.out.print("Enter word : ");
 		while ((line = input.nextLine()) != null) {
 			if (line.equals("exit")) {
-				System.out.println("Program exited");
 				return;
 			}
 			h.spellcheck(line);
+			System.out.print("Enter word : ");
 		}
 		input.close();
 	}
