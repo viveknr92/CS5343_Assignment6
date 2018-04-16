@@ -53,7 +53,8 @@ public class HashTable {
 		this.probingType = probingType;
 		this.filename = filename;
 		System.out.println("Initial hashtable size : " + tablesize);
-		System.out.println("Using " + probingType + " probing");
+		System.out.println("Using " + probingType + " probing : ");
+		System.out.println("Counting the collisions for each word : ");
 		createHashtablefromWords();
 		printHashTable();
 	}
@@ -161,8 +162,10 @@ public class HashTable {
 	}
 	
 	public void printHashTable() {
+		System.out.println("Hash Table : ");
 		for (int i = 0; i < hashtable.length; i++) {
-			HashTable.writeFile(i + " , " + hashtable[i] + "\n", true);
+			System.out.print(i + "-" + hashtable[i] + " , ");
 		}
+		System.out.println();
 	}
 }
