@@ -56,7 +56,7 @@ public class HashTable {
 			for (int i = 0; i < hashtable.length; i++) {
 				hashtable[i] = null;
 			}
-			System.out.println("Load factor exceeded. Changing hashtable size to : " + hashtable.length + " and Re-hashing table.");
+			System.out.println("Changing hashtable size to : " + hashtable.length + " and Re-hashing table.");
 		}
 	}
 	
