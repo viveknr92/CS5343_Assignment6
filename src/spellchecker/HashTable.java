@@ -162,4 +162,19 @@ public class HashTable {
 			e.printStackTrace();
 		}
 	}
+	public void searchWord() {
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		String line;
+		System.out.print("Enter word : (Enter \":q\" to terminate program) ");
+		while ((line = input.nextLine()) != null) {
+			System.out.println("");
+			if (line.toLowerCase().equals(":q")) { //enter :q to terminate program
+				return;
+			}
+			spellcheck(line.toLowerCase());
+			System.out.print("Enter word : (Enter \":q\" to terminate program) ");
+		}
+		input.close();
+	}
 }
