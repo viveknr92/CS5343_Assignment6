@@ -51,10 +51,10 @@ public class HashTable {
 		printHashTable();
 	}
 	public void createHashtablefromWords() {
-		while (!readwords()) {
-			this.tablesize = this.tablesize * 2;
+		while (!readwords()) { // while load factor > 0.5
+			this.tablesize = this.tablesize * 2; //double the tablesize
 			BigInteger size = BigInteger.valueOf(this.tablesize);
-			this.tablesize = size.nextProbablePrime().intValue();
+			this.tablesize = size.nextProbablePrime().intValue(); //look for the next prime number
 			this.hashtable = new String[tablesize];
 			for (int i = 0; i < hashtable.length; i++) {
 				hashtable[i] = null;
@@ -73,7 +73,7 @@ public class HashTable {
 			for (; sc.hasNextLine() ;) {
 				word = sc.nextLine();
 				numberofentires++;
-				if (numberofentires >= tablesize * loadfactor) {
+				if (numberofentires >= tablesize * loadfactor) { // rehashing required
 					sc.close();
 					return false;
 				}
@@ -85,7 +85,7 @@ public class HashTable {
 				}
 			}
 			System.out.println("Counting collisions for each word : ");
-			System.out.println(collisions);
+			System.out.println(collisions); // prints the collisions for the entire hash table
 			sc.close();
 		} 
 		catch (FileNotFoundException e) {
@@ -102,7 +102,7 @@ public class HashTable {
 			hashcode = (initial + i) % tablesize;
 		}
 		hashtable[hashcode] = value;
-		return i-1;
+		return i-1; // return number of collisions
 	}
 	
 	public int quadraticprobing(String value) {
@@ -113,7 +113,7 @@ public class HashTable {
 			hashcode = (initial + (i*i)) % tablesize;
 		}
 		hashtable[hashcode] = value;
-		return i-1;
+		return i-1; // return number of collisions
 	}
 	
 	public int hashFunction(String str) {
