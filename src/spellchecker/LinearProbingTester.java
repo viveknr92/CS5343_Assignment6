@@ -11,7 +11,7 @@ public class LinearProbingTester {
 		h1.searchWord();
 		System.out.println("");
 		
-		System.out.println("Adding 10 more words (110 words) ");
+		System.out.println("Adding 10 more words (110 words) and re-hashing to a new hashtable");
 		HashTable h2 = new HashTable(h1.tablesize, "list_2.txt", ProbingType.LINEAR);
 		h2.searchWord();
 		System.out.println("");

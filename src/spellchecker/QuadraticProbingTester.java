@@ -12,7 +12,7 @@ public class QuadraticProbingTester {
 		h3.searchWord();
 		System.out.println("");
 		
-		System.out.println("Adding 10 more words (110 words) ");
+		System.out.println("Adding 10 more words (110 words) and re-hashing to a new hashtable");
 		HashTable h4 = new HashTable(h3.tablesize, "list_2.txt", ProbingType.QUADRATIC);
 		h4.searchWord();
 		System.out.println("");
