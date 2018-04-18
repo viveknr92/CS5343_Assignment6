@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -52,6 +53,8 @@ public class HashTable {
 	public void createHashtablefromWords() {
 		while (!readwords()) {
 			this.tablesize = this.tablesize * 2;
+			BigInteger size = BigInteger.valueOf(this.tablesize);
+			this.tablesize = size.nextProbablePrime().intValue();
 			this.hashtable = new String[tablesize];
 			for (int i = 0; i < hashtable.length; i++) {
 				hashtable[i] = null;
